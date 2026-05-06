@@ -1,0 +1,57 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+  position: relative;
+}
+
+.auth-bg {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(0,212,255,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,107,53,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.auth-box {
+  width: 100%; max-width: 420px;
+  padding: 40px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 60px rgba(0,212,255,0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.auth-logo {
+  font-size: 24px; font-weight: 700;
+  letter-spacing: 4px;
+  text-align: center;
+  margin-bottom: 8px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--text2);
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.auth-footer a { color: var(--accent); text-decoration: none; }
+.auth-footer a:hover { text-decoration: underline; }
