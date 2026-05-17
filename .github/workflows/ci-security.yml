@@ -28,7 +28,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn clean verify sonar:sonar \
+          mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar \
             -DskipTests \
             -Dsonar.projectKey=RimeEL_CTF-PLATFORM \
             -Dsonar.organization=rime \
