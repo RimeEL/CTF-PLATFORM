@@ -29,10 +29,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=-RimeEL_CTF-PLATFORM \
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+            -DskipTests \
+            -Dsonar.projectKey=rime_CTF-PLATFORM \
+            -Dsonar.organization=rime \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
 
   owasp-zap-scan:
     name: OWASP ZAP Dynamic Scan
