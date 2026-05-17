@@ -9,7 +9,7 @@ on:
 jobs:
 
   sonarqube-analysis:
-    name: Build & SonarQube Scan
+    name: Build & SonarCloud Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -23,17 +23,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build backend
+      - name: Build & SonarCloud scan
         working-directory: ./backend
-        run: mvn clean install -DskipTests
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@master
-        with:
-          projectBaseDir: ./backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=-RimeEL_CTF-PLATFORM \
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
   owasp-zap-scan:
     name: OWASP ZAP Dynamic Scan
