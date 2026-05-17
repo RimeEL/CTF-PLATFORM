@@ -30,7 +30,7 @@ jobs:
         run: |
           mvn clean verify sonar:sonar \
             -DskipTests \
-            -Dsonar.projectKey=rime_CTF-PLATFORM \
+            -Dsonar.projectKey=RimeEL_CTF-PLATFORM \
             -Dsonar.organization=rime \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
