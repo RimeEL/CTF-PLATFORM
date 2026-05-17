@@ -82,7 +82,9 @@ jobs:
           mvn org.owasp:dependency-check-maven:check \
             -DfailBuildOnCVSS=7 \
             -Dformat=HTML \
-            -DoutputDirectory=../dependency-check-report
+            -DoutputDirectory=../dependency-check-report \
+            -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+            -DnvdApiDelay=6000
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
