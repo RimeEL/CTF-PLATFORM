@@ -1,17 +1,25 @@
 version: '3.8'
 services:
   backend:
-    build: ./backend
+    image: eclipse-temurin:17-jdk
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: sh -c "cd /app && mvn package -DskipTests && java -jar target/*.war"
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=jdbc:jdbc:postgresql://aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require
-      - DB_USER=postgres.hpbmeowxtqmbiyrbmgjm
-      - DB_PASSWORD=UVcq4Ji4Q6LoLOAg
+      - DB_URL=${DB_URL}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
 
   frontend:
-    build: ./frontend
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm ci && npm start"
     ports:
-      - "3000:80"
+      - "3000:3000"
     depends_on:
       - backend
