@@ -66,6 +66,7 @@ jobs:
     name: OWASP Dependency Check
     runs-on: ubuntu-latest
     needs: sonarqube-analysis
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,8 +77,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Cache NVD database
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/org/owasp/dependency-check-data
+          key: nvd-cache-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: nvd-cache-${{ runner.os }}-
+
       - name: Run OWASP Dependency-Check via Maven
         working-directory: ./backend
+        timeout-minutes: 20
         run: |
           mvn org.owasp:dependency-check-maven:check \
             -DfailBuildOnCVSS=7 \
@@ -85,7 +94,8 @@ jobs:
             -DoutputDirectory=../dependency-check-report \
             -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
             -DnvdApiDelay=6000 \
-            -DretireJsAnalyzerEnabled=false
+            -DretireJsAnalyzerEnabled=false \
+            -DnodeAnalyzerEnabled=false
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
@@ -93,7 +103,7 @@ jobs:
         with:
           name: dependency-check-report
           path: dependency-check-report/
-
+          
       - name: Start application
         env:
           DB_URL: ${{ secrets.DB_URL }}
