@@ -84,17 +84,15 @@ jobs:
           cd backend
           mvn clean compile
 
-      # 3. Scan en mode léger (Ne plante pas si la DB NVD locale est vide)
-      - name: Run Dependency-Check via Maven (Lightweight)
+      # 3. Exécution avec l'API miroir officielle v2 d'OWASP (Léger et autorisé)
+      - name: Run Dependency-Check via Maven
         run: |
           cd backend
           mvn org.owasp:dependency-check-maven:12.1.0:check \
             -DfailOnCVSS=7 \
-            -DautoUpdate=false \
-            -Ddata.failure=false \
-            -DcentralAnalyzerEnabled=true \
-            -DnexusAnalyzerEnabled=false \
-            -DnodeAnalyzerEnabled=false
+            -DautoUpdate=true \
+            -DnvdApiEndpoint="https://nvd.dependencycheck.org/api/v2" \
+            -DconnectionTimeout=60000
             
       # 4. Récupération du rapport
       - name: Upload Report
