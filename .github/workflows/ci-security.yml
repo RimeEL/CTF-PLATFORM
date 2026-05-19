@@ -78,24 +78,25 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 2. Compiler le backend (Génère les classes dans target/)
+      # 2. Compiler le backend (Génère le dossier target/ contenant les dépendances)
       - name: Build with Maven
         run: |
           cd backend
           mvn clean compile
 
-      # 3. Lancer le scan (Corrigé avec le bloc env)
+      # 3. Lancer le scan (Sans aucune variable Java héritée du runner)
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
         env:
-          JAVA_HOME: "" # Force le conteneur Docker à ignorer le chemin du runner
+          # On vide absolument toutes les variables Java qui font planter le conteneur Docker
+          JAVA_HOME: ""
+          JAVA_HOME_17_X64: ""
         with:
           project: 'CTF Platform'
           path: './backend'
           format: 'HTML'
           out: 'dependency-check-report'
-          # Attention : j'ai aussi nettoyé vos args ici car '--noupdate' était écrit deux fois dans vos logs
-          args: '--failOnCVSS 7 --noupdate' 
+          args: '--failOnCVSS 7 --noupdate'
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
