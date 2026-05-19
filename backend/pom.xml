@@ -121,6 +121,14 @@
                     <target>17</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>8.4.0</version>
+                <configuration>
+                    <suppressionFile>suppressions.xml</suppressionFile>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>
