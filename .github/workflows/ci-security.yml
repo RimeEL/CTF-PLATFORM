@@ -71,13 +71,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache Dependency Check data
-        uses: actions/cache@v4
-        with:
-          path: ~/.dependency-check
-          key: dependency-check-${{ runner.os }}
-          restore-keys: dependency-check-${{ runner.os }}
-
       - name: Run OWASP Dependency-Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
@@ -85,22 +78,7 @@ jobs:
           path: './backend'
           format: 'HTML'
           out: 'dependency-check-report'
-          args: >
-            --nvdApiKey ${{ secrets.NVD_API_KEY }}
-            --nvdApiDelay 6000
-            --failOnCVSS 7
-            --disableRetired
-            --disableNodeJS
-            --disableNodeAudit
-            --disableYarnAudit
-            --disableAssembly
-            --disablePyDist
-            --disablePyPkg
-            --disableRubygemspec
-            --disableBundleAudit
-            --disableCocoapodsAnalyzer
-            --disableSwiftPackageManagerAnalyzer
-            --data ~/.dependency-check/data
+          args: '--failOnCVSS 7 --noupdate'
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
