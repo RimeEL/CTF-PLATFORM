@@ -93,14 +93,13 @@ jobs:
           cd backend
           mvn clean compile
 
-      # 4. Exécution du Scan avec la dernière version et un miroir rapide (vaut mieux que le NVD officiel)
+      # 4. Exécution du Scan avec le bon endpoint d'API Miroir pour la v12
       - name: Run Dependency-Check via Maven
         run: |
           cd backend
           mvn org.owasp:dependency-check-maven:12.1.0:check \
             -DfailOnCVSS=7 \
-            -DnvdDatafeedUrl=https://jeremylong.github.io/DependencyCheck/dvdcss/nvdcve-1.1-%d.json.gz \
-            -DhostedDataEndpoint=https://jeremylong.github.io/DependencyCheck/data/hosted/
+            -DnvdApiEndpoint="https://dependency-check-transformer.advisories.testifysec.io/api/v2/cves"
             
       # 5. Récupération du rapport
       - name: Upload Report
