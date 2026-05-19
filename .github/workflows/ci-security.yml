@@ -78,12 +78,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 2. Configuration du Cache pour la base de données de Dependency-Check
+      # 2. Configuration du Cache GitHub
       - name: Cache Dependency-Check Data
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: ${{ runner.os }}-dependency-check-${{ github.run_id }} # Force la création/mise à jour du cache
+          key: ${{ runner.os }}-dependency-check-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-dependency-check-
 
@@ -93,12 +93,15 @@ jobs:
           cd backend
           mvn clean compile
 
-      # 4. Exécution du Scan (Sans bloquer l'autoUpdate pour qu'il puisse créer la base si absente)
+      # 4. Exécution du Scan avec la dernière version et un miroir rapide (vaut mieux que le NVD officiel)
       - name: Run Dependency-Check via Maven
         run: |
           cd backend
-          mvn org.owasp:dependency-check-maven:check -DfailOnCVSS=7
-
+          mvn org.owasp:dependency-check-maven:12.1.0:check \
+            -DfailOnCVSS=7 \
+            -DnvdDatafeedUrl=https://jeremylong.github.io/DependencyCheck/dvdcss/nvdcve-1.1-%d.json.gz \
+            -DhostedDataEndpoint=https://jeremylong.github.io/DependencyCheck/data/hosted/
+            
       # 5. Récupération du rapport
       - name: Upload Report
         uses: actions/upload-artifact@v4
