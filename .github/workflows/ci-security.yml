@@ -71,37 +71,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 1. Configuration de l'environnement Java
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@main
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          project: 'CTF Platform'
+          path: './backend'
+          format: 'HTML'
+          out: 'dependency-check-report'
+          args: '--failOnCVSS 7 --noupdate'
 
-      # 2. Compilation du projet
-      - name: Build Backend with Maven
-        run: |
-          cd backend
-          mvn clean compile
-
-      # 3. Scan sans l'analyseur NVD (Utilise Maven Central en mode distant)
-      - name: Run Dependency-Check via Maven (NVD-Bypassed)
-        run: |
-          cd backend
-          mvn org.owasp:dependency-check-maven:12.1.0:check \
-            -DfailOnCVSS=7 \
-            -DautoUpdate=false \
-            -DnvdAnlayzerEnabled=false \
-            -DcentralAnalyzerEnabled=true \
-            -Dplugins.failing.on.error=false
-            
-      # 4. Récupération du rapport
       - name: Upload Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: dependency-check-report
-          path: backend/target/dependency-check-report.html
+          path: dependency-check-report/
           
       - name: Start application
         env:
