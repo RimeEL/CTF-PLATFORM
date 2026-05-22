@@ -85,18 +85,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build project (download dependencies)
-        working-directory: ./backend
-        run: mvn -B dependency:resolve
-
       - name: Run OWASP Dependency-Check
-        uses: dependency-check/Dependency-Check_Action@main
-        with:
-          project: 'CTF Platform'
-          path: 'backend'
-          format: 'HTML'
-          out: 'dependency-check-report'
-          args: '--failOnCVSS 7 --noupdate'
+        working-directory: ./backend
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+            -DfailBuildOnCVSS=7 \
+            -Dformat=HTML \
+            -DoutputDirectory=../dependency-check-report \
+            -DnvdApiKey=${{ secrets.NVD_API_KEY }} \
+            -DnvdApiDelay=6000 \
+            -DretireJsAnalyzerEnabled=false \
+            -DnodeAnalyzerEnabled=false \
+            -DnodeAuditAnalyzerEnabled=false \
+            -DassemblyAnalyzerEnabled=false
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
