@@ -72,6 +72,8 @@ jobs:
   dependency-check:
     name: OWASP Dependency Check
     runs-on: ubuntu-latest
+    env:
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
     needs: sonarqube-analysis
     continue-on-error: true
     timeout-minutes: 30
