@@ -89,14 +89,20 @@ jobs:
         working-directory: ./backend
         run: mvn -B dependency:resolve
 
-      - name: Run OWASP Dependency-Check
-        working-directory: ./backend
-        run: |
-          mvn -B org.owasp:dependency-check-maven:8.4.0:check \
-            -Dformat=HTML \
-            -DoutputDirectory=../dependency-check-report \
-            -DfailOnCVSS=7 \
-            -Dnoupdate=true
+      - name: Run OWASP Dependency-Check (Docker action)
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'CTF Platform'
+          scan: './backend'
+          format: 'HTML'
+          out: 'dependency-check-report'
+          args: '--failOnCVSS 7'
+        env:
+          # Clear runner JAVA_HOME so the action's container uses its own Java
+          JAVA_HOME: ''
+          JAVA_HOME_17_X64: ''
+          # NVD API key (create a repository secret named NVD_API_KEY)
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
