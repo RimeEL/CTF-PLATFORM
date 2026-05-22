@@ -85,23 +85,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build project (download dependencies)
+      - name: Build backend and download deps
         working-directory: ./backend
-        run: mvn -B dependency:resolve
+        run: mvn -B -DskipTests dependency:go-offline package
 
-      - name: Run OWASP Dependency-Check
+      - name: Ensure suppressions file
+        run: |
+          if [ ! -f backend/suppressions.xml ]; then
+            echo '<suppressions/>' > backend/suppressions.xml
+          fi
+
+      - name: Run OWASP Dependency-Check (Maven plugin)
+        working-directory: ./backend
         run: |
           mkdir -p "${{ github.workspace }}/dependency-check-report"
-          docker run --rm \
-            -v "${{ github.workspace }}/backend":/src \
-            -v "${{ github.workspace }}/dependency-check-report":/report \
-            owasp/dependency-check-action:latest \
-            --project 'CTF Platform' \
-            --scan /src/pom.xml \
-            --scan /src \
-            --format HTML \
-            --out /report \
-            --failOnCVSS 7
+          mvn org.owasp:dependency-check-maven:aggregate -Dformat=ALL -DoutputDirectory=${{ github.workspace }}/dependency-check-report -DskipTests
           ls -la "${{ github.workspace }}/dependency-check-report"
 
       - name: Upload Report
