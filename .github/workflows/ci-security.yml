@@ -90,17 +90,16 @@ jobs:
         run: mvn -B dependency:resolve
 
       - name: Run OWASP Dependency-Check
-        run: |
-          mkdir -p "$GITHUB_WORKSPACE/dependency-check-report"
-          env -u JAVA_HOME -u JAVA_HOME_17_X64 docker run --rm \
-            -v "$GITHUB_WORKSPACE/backend":/src \
-            -v "$GITHUB_WORKSPACE/dependency-check-report":/report \
-            owasp/dependency-check-action:latest \
-            --project 'CTF Platform' \
-            --scan /src \
-            --format HTML \
-            --out /report \
-            --failOnCVSS 7
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'CTF Platform'
+          path: 'backend'
+          format: 'HTML'
+          out: 'dependency-check-report'
+          args: '--failOnCVSS 7 --noupdate'
+        env:
+          JAVA_HOME: ''
+          JAVA_HOME_17_X64: ''
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
