@@ -69,44 +69,45 @@ jobs:
         run: |
           docker compose down --remove-orphans || true
 
-  dependency-check:
-    name: OWASP Dependency Check
+  trivy-scan:
+    name: Trivy Image Scan
     runs-on: ubuntu-latest
-    env:
-      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
     needs: sonarqube-analysis
     continue-on-error: true
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Build backend Docker image via docker compose
+        run: docker compose build backend
+      - name: Cache Trivy DB
+        uses: actions/cache@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          path: ${{ runner.temp }}/trivy-cache
+          key: trivy-db-${{ runner.os }}-v1
+          restore-keys: trivy-db-${{ runner.os }}-
 
-      - name: Build backend and download deps
-        working-directory: ./backend
-        run: mvn -B -DskipTests dependency:go-offline package
-
-      - name: Ensure suppressions file
+      - name: Install Trivy CLI
         run: |
-          if [ ! -f backend/suppressions.xml ]; then
-            echo '<suppressions/>' > backend/suppressions.xml
-          fi
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
-      - name: Run OWASP Dependency-Check (Maven plugin)
-        working-directory: ./backend
+      - name: Set Trivy cache dir
+        run: echo "TRIVY_CACHE_DIR=${{ runner.temp }}/trivy-cache" >> $GITHUB_ENV
+
+      - name: Run Trivy image scan (vuln only)
         run: |
-          mkdir -p "${{ github.workspace }}/dependency-check-report"
-          mvn org.owasp:dependency-check-maven:aggregate -Dformat=ALL -DoutputDirectory=${{ github.workspace }}/dependency-check-report -DskipTests
-          ls -la "${{ github.workspace }}/dependency-check-report"
+          trivy image --scanners vuln --severity CRITICAL,HIGH --format json --output trivy-report.json --timeout 30m --skip-version-check --exit-code 0 ctf-platform-backend:ci
 
-      - name: Upload Report
-        uses: actions/upload-artifact@v4
+      - name: Run Trivy filesystem scan (vuln only)
+        run: |
+          trivy fs --scanners vuln --severity CRITICAL,HIGH --format json --output trivy-fs-report.json --timeout 30m --skip-version-check --exit-code 0 ./backend
+
+      - name: Upload Trivy reports
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: dependency-check-report
-          path: dependency-check-report/
+          name: trivy-reports
+          path: |
+            trivy-report.json
+            trivy-fs-report.json

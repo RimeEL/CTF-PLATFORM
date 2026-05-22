@@ -1,0 +1,508 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.69.3"
+  },
+  "ReportID": "019e5085-ef41-7dd3-a64c-b2ebde337369",
+  "CreatedAt": "2026-05-22T17:30:15.361906+01:00",
+  "ArtifactName": "backend",
+  "ArtifactType": "filesystem",
+  "Results": [
+    {
+      "Target": "pom.xml",
+      "Class": "lang-pkgs",
+      "Type": "pom",
+      "Packages": [
+        {
+          "ID": "com.ctf:ctf-platform:0.0.1-SNAPSHOT::a3c31e07",
+          "Name": "com.ctf:ctf-platform",
+          "Identifier": {
+            "PURL": "pkg:maven/com.ctf/ctf-platform@0.0.1-SNAPSHOT",
+            "UID": "90443aeb6c6b2387"
+          },
+          "Version": "0.0.1-SNAPSHOT",
+          "Relationship": "root",
+          "DependsOn": [
+            "ch.qos.logback:logback-classic:1.5.6::4f7218dd",
+            "com.auth0:java-jwt:4.4.0::575cab5b",
+            "com.google.code.gson:gson:2.10.1::2a46dc69",
+            "com.zaxxer:HikariCP:5.1.0::1fb58d93",
+            "org.javassist:javassist:3.29.2-GA::4147c3a8",
+            "org.json:json:20231013::8da64b09",
+            "org.mindrot:jbcrypt:0.4::10ba1c7e",
+            "org.postgresql:postgresql:42.7.5::843d9638",
+            "org.slf4j:slf4j-api:2.0.13::8d4908ce"
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "ch.qos.logback:logback-classic:1.5.6::4f7218dd",
+          "Name": "ch.qos.logback:logback-classic",
+          "Identifier": {
+            "PURL": "pkg:maven/ch.qos.logback/logback-classic@1.5.6",
+            "UID": "4340ca6550ebc421"
+          },
+          "Version": "1.5.6",
+          "Licenses": [
+            "EPL-1.0",
+            "LGPL-2.1-only"
+          ],
+          "Relationship": "direct",
+          "DependsOn": [
+            "ch.qos.logback:logback-core:1.5.6::92a2f306",
+            "org.slf4j:slf4j-api:2.0.13::8d4908ce"
+          ],
+          "Locations": [
+            {
+              "StartLine": 79,
+              "EndLine": 83
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "com.auth0:java-jwt:4.4.0::575cab5b",
+          "Name": "com.auth0:java-jwt",
+          "Identifier": {
+            "PURL": "pkg:maven/com.auth0/java-jwt@4.4.0",
+            "UID": "19c41db4795f42d9"
+          },
+          "Version": "4.4.0",
+          "Licenses": [
+            "MIT"
+          ],
+          "Relationship": "direct",
+          "DependsOn": [
+            "com.fasterxml.jackson.core:jackson-databind:2.14.2::f6a5c980"
+          ],
+          "Locations": [
+            {
+              "StartLine": 60,
+              "EndLine": 64
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "com.google.code.gson:gson:2.10.1::2a46dc69",
+          "Name": "com.google.code.gson:gson",
+          "Identifier": {
+            "PURL": "pkg:maven/com.google.code.gson/gson@2.10.1",
+            "UID": "6d34a7e56a67aad7"
+          },
+          "Version": "2.10.1",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 67,
+              "EndLine": 71
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "com.zaxxer:HikariCP:5.1.0::1fb58d93",
+          "Name": "com.zaxxer:HikariCP",
+          "Identifier": {
+            "PURL": "pkg:maven/com.zaxxer/HikariCP@5.1.0",
+            "UID": "2c6c1583240013f1"
+          },
+          "Version": "5.1.0",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Relationship": "direct",
+          "DependsOn": [
+            "org.slf4j:slf4j-api:2.0.13::8d4908ce"
+          ],
+          "Locations": [
+            {
+              "StartLine": 46,
+              "EndLine": 50
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "org.javassist:javassist:3.29.2-GA::4147c3a8",
+          "Name": "org.javassist:javassist",
+          "Identifier": {
+            "PURL": "pkg:maven/org.javassist/javassist@3.29.2-GA",
+            "UID": "fb6f270b70e3b635"
+          },
+          "Version": "3.29.2-GA",
+          "Licenses": [
+            "MPL-1.1",
+            "LGPL-2.1-only",
+            "Apache-2.0"
+          ],
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 41,
+              "EndLine": 45
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "org.json:json:20231013::8da64b09",
+          "Name": "org.json:json",
+          "Identifier": {
+            "PURL": "pkg:maven/org.json/json@20231013",
+            "UID": "68f4fc479be6f65e"
+          },
+          "Version": "20231013",
+          "Licenses": [
+            "Public Domain"
+          ],
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 92,
+              "EndLine": 96
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "org.mindrot:jbcrypt:0.4::10ba1c7e",
+          "Name": "org.mindrot:jbcrypt",
+          "Identifier": {
+            "PURL": "pkg:maven/org.mindrot/jbcrypt@0.4",
+            "UID": "5515e371557c1661"
+          },
+          "Version": "0.4",
+          "Licenses": [
+            "ISC"
+          ],
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 53,
+              "EndLine": 57
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "org.postgresql:postgresql:42.7.5::843d9638",
+          "Name": "org.postgresql:postgresql",
+          "Identifier": {
+            "PURL": "pkg:maven/org.postgresql/postgresql@42.7.5",
+            "UID": "54b9748d763eacd3"
+          },
+          "Version": "42.7.5",
+          "Licenses": [
+            "BSD-2-Clause"
+          ],
+          "Relationship": "direct",
+          "DependsOn": [
+            "org.checkerframework:checker-qual:3.48.3::c293a0a4"
+          ],
+          "Locations": [
+            {
+              "StartLine": 33,
+              "EndLine": 38
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "org.slf4j:slf4j-api:2.0.13::8d4908ce",
+          "Name": "org.slf4j:slf4j-api",
+          "Identifier": {
+            "PURL": "pkg:maven/org.slf4j/slf4j-api@2.0.13",
+            "UID": "4baf87b9ae98f0d0"
+          },
+          "Version": "2.0.13",
+          "Licenses": [
+            "MIT"
+          ],
+          "Relationship": "direct",
+          "Locations": [
+            {
+              "StartLine": 74,
+              "EndLine": 78
+            }
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "ch.qos.logback:logback-core:1.5.6::92a2f306",
+          "Name": "ch.qos.logback:logback-core",
+          "Identifier": {
+            "PURL": "pkg:maven/ch.qos.logback/logback-core@1.5.6",
+            "UID": "84c6b56a9c9c57f9"
+          },
+          "Version": "1.5.6",
+          "Licenses": [
+            "EPL-1.0",
+            "LGPL-2.1-only"
+          ],
+          "Indirect": true,
+          "Relationship": "indirect",
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "com.fasterxml.jackson.core:jackson-annotations:2.14.2::3e06777c",
+          "Name": "com.fasterxml.jackson.core:jackson-annotations",
+          "Identifier": {
+            "PURL": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.2",
+            "UID": "8d4d32e3b6387024"
+          },
+          "Version": "2.14.2",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Indirect": true,
+          "Relationship": "indirect",
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "com.fasterxml.jackson.core:jackson-core:2.14.2::a5cddd41",
+          "Name": "com.fasterxml.jackson.core:jackson-core",
+          "Identifier": {
+            "PURL": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2",
+            "UID": "91f490721019f205"
+          },
+          "Version": "2.14.2",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Indirect": true,
+          "Relationship": "indirect",
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "com.fasterxml.jackson.core:jackson-databind:2.14.2::f6a5c980",
+          "Name": "com.fasterxml.jackson.core:jackson-databind",
+          "Identifier": {
+            "PURL": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.2",
+            "UID": "fa9e41bda6ebc6f4"
+          },
+          "Version": "2.14.2",
+          "Licenses": [
+            "Apache-2.0"
+          ],
+          "Indirect": true,
+          "Relationship": "indirect",
+          "DependsOn": [
+            "com.fasterxml.jackson.core:jackson-annotations:2.14.2::3e06777c",
+            "com.fasterxml.jackson.core:jackson-core:2.14.2::a5cddd41"
+          ],
+          "AnalyzedBy": "pom"
+        },
+        {
+          "ID": "org.checkerframework:checker-qual:3.48.3::c293a0a4",
+          "Name": "org.checkerframework:checker-qual",
+          "Identifier": {
+            "PURL": "pkg:maven/org.checkerframework/checker-qual@3.48.3",
+            "UID": "2f04929fe7f8c282"
+          },
+          "Version": "3.48.3",
+          "Licenses": [
+            "MIT"
+          ],
+          "Indirect": true,
+          "Relationship": "indirect",
+          "AnalyzedBy": "pom"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2025-52999",
+          "VendorIDs": [
+            "GHSA-h46c-h94j-95f3"
+          ],
+          "PkgID": "com.fasterxml.jackson.core:jackson-core:2.14.2::a5cddd41",
+          "PkgName": "com.fasterxml.jackson.core:jackson-core",
+          "PkgIdentifier": {
+            "PURL": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2",
+            "UID": "91f490721019f205"
+          },
+          "InstalledVersion": "2.14.2",
+          "FixedVersion": "2.15.0",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-52999",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Maven",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Amaven"
+          },
+          "Fingerprint": "sha256:dbef014b3ac2ed14e4fc650e8a523c80f085ac61c1e7908bb58bc87dbaafe1e9",
+          "Title": "com.fasterxml.jackson.core/jackson-core: jackson-core Potential StackoverflowError",
+          "Description": "jackson-core contains core low-level incremental (\"streaming\") parser and generator abstractions used by Jackson Data Processor. In versions prior to 2.15.0, if a user parses an input file and it has deeply nested data, Jackson could end up throwing a StackoverflowError if the depth is particularly large. jackson-core 2.15.0 contains a configurable limit for how deep Jackson will traverse in an input document, defaulting to an allowable depth of 1000. jackson-core will throw a StreamConstraintsException if the limit is reached. jackson-databind also benefits from this change because it uses jackson-core to parse JSON inputs. As a workaround, users should avoid parsing input files from untrusted sources.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-121"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 2,
+            "ghsa": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+              "V40Score": 8.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2025:14126",
+            "https://access.redhat.com/security/cve/CVE-2025-52999",
+            "https://bugzilla.redhat.com/2374804",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2374804",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-52999",
+            "https://errata.almalinux.org/8/ALSA-2025-14126.html",
+            "https://errata.rockylinux.org/RLSA-2025:12280",
+            "https://github.com/FasterXML/jackson-core",
+            "https://github.com/FasterXML/jackson-core/pull/943",
+            "https://github.com/FasterXML/jackson-core/security/advisories/GHSA-h46c-h94j-95f3",
+            "https://linux.oracle.com/cve/CVE-2025-52999.html",
+            "https://linux.oracle.com/errata/ELSA-2025-14126.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-52999",
+            "https://www.cve.org/CVERecord?id=CVE-2025-52999"
+          ],
+          "PublishedDate": "2025-06-25T17:15:39.82Z",
+          "LastModifiedDate": "2026-04-15T00:35:42.02Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2025-49146",
+          "VendorIDs": [
+            "GHSA-hq9p-pm7w-8p54"
+          ],
+          "PkgID": "org.postgresql:postgresql:42.7.5::843d9638",
+          "PkgName": "org.postgresql:postgresql",
+          "PkgIdentifier": {
+            "PURL": "pkg:maven/org.postgresql/postgresql@42.7.5",
+            "UID": "54b9748d763eacd3"
+          },
+          "InstalledVersion": "42.7.5",
+          "FixedVersion": "42.7.7",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2025-49146",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Maven",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Amaven"
+          },
+          "Fingerprint": "sha256:9acfc5be0c9f27fceb2f7e358370f1df954c222367bb298fd4c10afccd407419",
+          "Title": "pgjdbc: pgjdbc insecure authentication in channel binding",
+          "Description": "pgjdbc is an open source postgresql JDBC Driver. From 42.7.4 and until 42.7.7, when the PostgreSQL JDBC driver is configured with channel binding set to required (default value is prefer), the driver would incorrectly allow connections to proceed with authentication methods that do not support channel binding (such as password, MD5, GSS, or SSPI authentication). This could allow a man-in-the-middle attacker to intercept connections that users believed were protected by channel binding requirements. This vulnerability is fixed in 42.7.7.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-287"
+          ],
+          "VendorSeverity": {
+            "bitnami": 2,
+            "ghsa": 3,
+            "nvd": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.9
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+              "V3Score": 8.2
+            },
+            "nvd": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+              "V3Score": 5.9
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+              "V3Score": 8.2
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2025-49146",
+            "https://datatracker.ietf.org/doc/html/rfc5802",
+            "https://datatracker.ietf.org/doc/html/rfc7677",
+            "https://github.com/pgjdbc/pgjdbc",
+            "https://github.com/pgjdbc/pgjdbc/commit/9217ed16cb2918ab1b6b9258ae97e6ede244d8a0",
+            "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-hq9p-pm7w-8p54",
+            "https://nvd.nist.gov/vuln/detail/CVE-2025-49146",
+            "https://www.cve.org/CVERecord?id=CVE-2025-49146",
+            "https://www.postgresql.org/docs/current/sasl-authentication.html#SASL-SCRAM-SHA-256"
+          ],
+          "PublishedDate": "2025-06-11T15:15:42.85Z",
+          "LastModifiedDate": "2025-10-06T19:29:58.977Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-42198",
+          "VendorIDs": [
+            "GHSA-98qh-xjc8-98pq"
+          ],
+          "PkgID": "org.postgresql:postgresql:42.7.5::843d9638",
+          "PkgName": "org.postgresql:postgresql",
+          "PkgIdentifier": {
+            "PURL": "pkg:maven/org.postgresql/postgresql@42.7.5",
+            "UID": "54b9748d763eacd3"
+          },
+          "InstalledVersion": "42.7.5",
+          "FixedVersion": "42.7.11",
+          "Status": "fixed",
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-42198",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Maven",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Amaven"
+          },
+          "Fingerprint": "sha256:74907b84f55b192558d1d3c0f621255dfe56aba8c588f4a6b537e9b79ea4db1a",
+          "Title": "jdbc.postgresql.org: pgjdbc: Client-side Denial of Service via malicious SCRAM-SHA-256 authentication",
+          "Description": "pgjdbc is an open source postgresql JDBC Driver. From version 42.2.0 to before version 42.7.11, pgjdbc is vulnerable to a client-side denial of service during SCRAM-SHA-256 authentication. A malicious server can instruct the driver to perform SCRAM authentication with a very large iteration count. With a large enough value, the client spends an unbounded amount of CPU time inside PBKDF2 before authentication can fail. A single attempt ties up a CPU core. Repeated or concurrent attempts exhaust client CPU and can wedge connection pools. In affected versions, loginTimeout did not fully mitigate this problem. When loginTimeout expired, the caller could stop waiting, but the worker thread performing the connection attempt could continue running and burning CPU inside the SCRAM PBKDF2 computation. This issue has been patched in version 42.7.11.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-770"
+          ],
+          "VendorSeverity": {
+            "bitnami": 3,
+            "ghsa": 3,
+            "redhat": 3
+          },
+          "CVSS": {
+            "bitnami": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "ghsa": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-42198",
+            "https://github.com/pgjdbc/pgjdbc",
+            "https://github.com/pgjdbc/pgjdbc/releases/tag/REL42.7.11",
+            "https://github.com/pgjdbc/pgjdbc/security/advisories/GHSA-98qh-xjc8-98pq",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-42198",
+            "https://www.cve.org/CVERecord?id=CVE-2026-42198"
+          ],
+          "PublishedDate": "2026-04-29T16:16:25.427Z",
+          "LastModifiedDate": "2026-05-01T12:51:20.853Z"
+        }
+      ]
+    }
+  ]
+}
