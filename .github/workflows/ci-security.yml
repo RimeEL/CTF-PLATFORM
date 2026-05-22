@@ -97,9 +97,6 @@ jobs:
           format: 'HTML'
           out: 'dependency-check-report'
           args: '--failOnCVSS 7 --noupdate'
-        env:
-          JAVA_HOME: ''
-          JAVA_HOME_17_X64: ''
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
