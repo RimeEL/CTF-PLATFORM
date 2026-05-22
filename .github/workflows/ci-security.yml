@@ -97,6 +97,7 @@ jobs:
             -v "${{ github.workspace }}/dependency-check-report":/report \
             owasp/dependency-check-action:latest \
             --project 'CTF Platform' \
+            --scan /src/pom.xml \
             --scan /src \
             --format HTML \
             --out /report \
