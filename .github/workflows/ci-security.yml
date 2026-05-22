@@ -95,12 +95,13 @@ jobs:
           docker run --rm \
             -v "${{ github.workspace }}/backend":/src \
             -v "${{ github.workspace }}/dependency-check-report":/report \
-            owasp/dependency-check:latest \
+            owasp/dependency-check-action:latest \
             --project 'CTF Platform' \
             --scan /src \
             --format HTML \
             --out /report \
             --failOnCVSS 7
+          ls -la "${{ github.workspace }}/dependency-check-report"
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
