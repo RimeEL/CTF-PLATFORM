@@ -100,8 +100,7 @@ jobs:
             --scan /src \
             --format HTML \
             --out /report \
-            --failOnCVSS 7 \
-            --noupdate
+            --failOnCVSS 7
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
