@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8080/ctf-platform';
+const BASE_URL = '/ctf-platform';
 
 const getToken = () => localStorage.getItem('token');
 
