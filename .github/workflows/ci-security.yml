@@ -53,20 +53,29 @@ jobs:
 
       - name: OWASP ZAP Baseline Scan
         run: |
+          mkdir -p ${{ github.workspace }}/zap-output
           docker run --network=host \
-            -v ${{ github.workspace }}:/zap/wrk/:rw \
+            -v ${{ github.workspace }}/zap-output:/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py \
             -t http://localhost/ \
-            -r /zap/wrk/report_html.html \
+            -r report_html.html \
             -I || true
+
+      - name: Debug - list files
+        if: always()
+        run: |
+          echo "=== workspace ==="
+          ls -la ${{ github.workspace }}/
+          echo "=== zap-output ==="
+          ls -la ${{ github.workspace }}/zap-output/ || echo "dossier vide ou inexistant"
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: zap-report
-          path: ${{ github.workspace }}/report_html.html
+          path: ${{ github.workspace }}/zap-output/report_html.html
 
       - name: Stop application
         if: always()
