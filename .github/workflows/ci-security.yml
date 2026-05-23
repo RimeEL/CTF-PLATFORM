@@ -56,10 +56,12 @@ jobs:
         with:
           target: 'http://localhost/'
           allow_issue_writing: false
-          artifact_name: 'zap-report-action'
+          artifact_name: 'none'
+          issue_title: 'ZAP Scan'
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: zap-report
           path: report_html.html
