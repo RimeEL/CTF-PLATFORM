@@ -47,8 +47,14 @@ SONAR_URL     = "https://sonarcloud.io"
 
 
 # Règles dont la criticité est certaine — classées TP sans passer par le modèle ML.
-# secrets:S2068 / S6290 = credentials hardcodés (vulnérabilité maximale).
-FORCED_TRUE_POSITIVES = {"secrets:S2068", "secrets:S6290"}
+FORCED_TRUE_POSITIVES = {
+    "secrets:S2068",  # credentials hardcodés (secrets)
+    "secrets:S6290",  # credentials hardcodés (secrets)
+    "java:S6437",     # passwords compromis (BLOCKER)
+    "java:S2226",     # champ mutable dans Servlet partagé → race condition
+    "java:S5122",     # CORS permissif → risque CSRF
+    "java:S2068",     # passwords hardcodés (variante java)
+}
 
 
 def fetch_all_issues():
@@ -131,9 +137,17 @@ for issue in all_issues:
 
     # Règles à forcer en TP quel que soit le préfixe
     if rule in FORCED_TRUE_POSITIVES:
+        notes = {
+            "secrets:S2068": "Forcé TP : credential hardcodé détecté (secrets)",
+            "secrets:S6290": "Forcé TP : credential hardcodé détecté (secrets)",
+            "java:S6437":    "Forcé TP : password compromis — révoquer immédiatement",
+            "java:S2226":    "Forcé TP : champ mutable dans Servlet partagé → race condition",
+            "java:S5122":    "Forcé TP : configuration CORS permissive → risque CSRF",
+            "java:S2068":    "Forcé TP : password hardcodé dans le code source Java",
+        }
         entry = base_entry(issue)
         entry.update({"ml_prediction": 0, "fp_probability": 0.0,
-                      "note": "Forcé TP : credential hardcodé détecté"})
+                      "note": notes.get(rule, "Forcé TP : règle critique")})
         true_positives.append(entry)
         continue
 
