@@ -4,7 +4,12 @@ import numpy as np
 import json
 import os
 import sys
+import types
 from gensim.models import Word2Vec
+
+# The w2v model was pickled in an env that had a 'tools' module; stub it out
+# so gensim's unpickler can resolve the reference without crashing.
+sys.modules.setdefault("tools", types.ModuleType("tools"))
 
 print("[INFO] Chargement des modèles...")
 model      = joblib.load("scripts/lgbm_model.pkl")
