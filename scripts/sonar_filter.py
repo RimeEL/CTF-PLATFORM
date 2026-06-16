@@ -7,9 +7,23 @@ import sys
 import types
 from gensim.models import Word2Vec
 
-# The w2v model was pickled in an env that had a 'tools' module; stub it out
-# so gensim's unpickler can resolve the reference without crashing.
-sys.modules.setdefault("tools", types.ModuleType("tools"))
+# The w2v model was pickled in an env that had a 'tools' package (including
+# tools.callbacks). Stub out the entire tools.* namespace with an import hook
+# so pickle can resolve any submodule reference without crashing.
+class _StubFinder:
+    def find_module(self, name, path=None):
+        if name == "tools" or name.startswith("tools."):
+            return self
+
+    def load_module(self, name):
+        if name not in sys.modules:
+            mod = types.ModuleType(name)
+            mod.__path__ = []
+            mod.__package__ = name
+            sys.modules[name] = mod
+        return sys.modules[name]
+
+sys.meta_path.insert(0, _StubFinder())
 
 print("[INFO] Chargement des modèles...")
 model      = joblib.load("scripts/lgbm_model.pkl")
