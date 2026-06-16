@@ -7,9 +7,20 @@ import sys
 import types
 from gensim.models import Word2Vec
 
-# The w2v model was pickled in an env that had a 'tools' package (including
-# tools.callbacks). Stub out the entire tools.* namespace with an import hook
-# so pickle can resolve any submodule reference without crashing.
+# The w2v model was pickled with a 'tools' package (tools.callbacks.EpochSaver
+# and possibly others). Stub out the entire tools.* namespace: each stub module
+# dynamically creates empty classes for any attribute pickle looks up, with a
+# no-op __setstate__ so stored callback state is silently absorbed.
+class _StubBase:
+    def __init__(self, *_args, **_kwargs): pass
+    def __setstate__(self, _state): pass
+
+class _StubModule(types.ModuleType):
+    def __getattr__(self, name):
+        stub_cls = type(name, (_StubBase,), {})
+        setattr(self, name, stub_cls)
+        return stub_cls
+
 class _StubFinder:
     def find_module(self, name, path=None):
         if name == "tools" or name.startswith("tools."):
@@ -17,7 +28,7 @@ class _StubFinder:
 
     def load_module(self, name):
         if name not in sys.modules:
-            mod = types.ModuleType(name)
+            mod = _StubModule(name)
             mod.__path__ = []
             mod.__package__ = name
             sys.modules[name] = mod
