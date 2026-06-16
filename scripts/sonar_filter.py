@@ -46,6 +46,11 @@ PROJECT_KEY   = os.environ.get("SONAR_PROJECT_KEY", "RimeEL_CTF-PLATFORM")
 SONAR_URL     = "https://sonarcloud.io"
 
 
+# Règles dont la criticité est certaine — classées TP sans passer par le modèle ML.
+# secrets:S2068 / S6290 = credentials hardcodés (vulnérabilité maximale).
+FORCED_TRUE_POSITIVES = {"secrets:S2068", "secrets:S6290"}
+
+
 def fetch_all_issues():
     issues = []
     page = 1
@@ -53,7 +58,7 @@ def fetch_all_issues():
     while True:
         resp = requests.get(
             f"{SONAR_URL}/api/issues/search",
-            params={"componentKeys": PROJECT_KEY, "languages": "java", "ps": 500, "p": page},
+            params={"componentKeys": PROJECT_KEY, "ps": 500, "p": page},
             auth=(SONAR_TOKEN, ""),
         )
         resp.raise_for_status()
@@ -103,55 +108,53 @@ def build_feature(issue):
     ])
 
 
-def is_java_rule(rule):
-    return rule.startswith("java:") or rule.startswith("squid:")
+def base_entry(issue):
+    return {
+        "rule":      issue.get("rule", ""),
+        "severity":  issue.get("severity", ""),
+        "message":   issue.get("message", ""),
+        "component": issue.get("component", ""),
+        "line":      issue.get("line"),
+    }
 
 
 all_issues = fetch_all_issues()
 print(f"[INFO] {len(all_issues)} issues récupérées au total")
 
-true_positives   = []
-false_positives  = []
+true_positives      = []
+false_positives     = []
 unknown_rule_issues = []
-non_java_issues  = []
+non_java_issues     = []
 
 for issue in all_issues:
     rule = issue.get("rule", "")
 
-    if not is_java_rule(rule):
-        non_java_issues.append({
-            "rule":      rule,
-            "severity":  issue.get("severity", ""),
-            "message":   issue.get("message", ""),
-            "component": issue.get("component", ""),
-            "line":      issue.get("line"),
-        })
+    # Règles à forcer en TP quel que soit le préfixe
+    if rule in FORCED_TRUE_POSITIVES:
+        entry = base_entry(issue)
+        entry.update({"ml_prediction": 0, "fp_probability": 0.0,
+                      "note": "Forcé TP : credential hardcodé détecté"})
+        true_positives.append(entry)
         continue
 
+    # Issues non-Java (javascript:, typescript:, secrets: hors liste forcée, etc.)
+    if not (rule.startswith("java:") or rule.startswith("squid:")):
+        non_java_issues.append(base_entry(issue))
+        continue
+
+    # Règle Java inconnue du modèle
     normalized = normalize_rule(rule)
     if normalized not in squid_list:
-        unknown_rule_issues.append({
-            "rule":      rule,
-            "severity":  issue.get("severity", ""),
-            "message":   issue.get("message", ""),
-            "component": issue.get("component", ""),
-            "line":      issue.get("line"),
-        })
+        unknown_rule_issues.append(base_entry(issue))
         continue
 
+    # Classification ML
     fv    = build_feature(issue)
     pred  = model.predict([fv])[0]
     proba = model.predict_proba([fv])[0][1]
 
-    entry = {
-        "rule":           rule,
-        "severity":       issue.get("severity", ""),
-        "message":        issue.get("message", ""),
-        "component":      issue.get("component", ""),
-        "line":           issue.get("line"),
-        "ml_prediction":  int(pred),
-        "fp_probability": round(float(proba), 3),
-    }
+    entry = base_entry(issue)
+    entry.update({"ml_prediction": int(pred), "fp_probability": round(float(proba), 3)})
 
     if pred == 0:
         true_positives.append(entry)
@@ -161,21 +164,24 @@ for issue in all_issues:
 java_analyzed = len(true_positives) + len(false_positives)
 print(f"[INFO] {java_analyzed} issues Java analysées par le modèle ML")
 print(f"[INFO] {len(non_java_issues)} issues non-Java ignorées (javascript/secrets/typescript)")
+print(f"[INFO] {len(unknown_rule_issues)} issues Java avec règle inconnue du modèle")
 
 report = {
-    "total_issues":            len(all_issues),
-    "java_issues_analyzed":    java_analyzed,
-    "non_java_issues_skipped": len(non_java_issues),
-    "true_positives_count":    len(true_positives),
-    "false_positives_count":   len(false_positives),
-    "true_positives":          true_positives,
-    "false_positives":         false_positives,
-    "non_java_issues":         non_java_issues,
+    "total_issues":               len(all_issues),
+    "java_issues_analyzed":       java_analyzed,
+    "non_java_issues_skipped":    len(non_java_issues),
+    "unknown_rule_issues_count":  len(unknown_rule_issues),
+    "true_positives_count":       len(true_positives),
+    "false_positives_count":      len(false_positives),
+    "true_positives":             true_positives,
+    "false_positives":            false_positives,
+    "unknown_rule_issues":        unknown_rule_issues,
+    "non_java_issues":            non_java_issues,
 }
 
 with open("sonar_filtered_report.json", "w", encoding="utf-8") as f:
     json.dump(report, f, indent=2, ensure_ascii=False)
 
-print(f"[RÉSULTAT] Vrais positifs Java : {len(true_positives)}")
-print(f"[RÉSULTAT] Faux positifs Java  : {len(false_positives)}")
+print(f"[RÉSULTAT] Vrais positifs : {len(true_positives)}")
+print(f"[RÉSULTAT] Faux positifs  : {len(false_positives)}")
 print("[RAPPORT] sonar_filtered_report.json généré")
