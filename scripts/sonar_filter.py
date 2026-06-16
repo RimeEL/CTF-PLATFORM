@@ -142,7 +142,7 @@ for issue in all_issues:
         non_java_issues.append(base_entry(issue))
         continue
 
-    # Règle Java inconnue du modèle
+    # Règle Java inconnue du modèle — stockée pour classification par sévérité
     normalized = normalize_rule(rule)
     if normalized not in squid_list:
         unknown_rule_issues.append(base_entry(issue))
@@ -161,22 +161,42 @@ for issue in all_issues:
     else:
         false_positives.append(entry)
 
-java_analyzed = len(true_positives) + len(false_positives)
-print(f"[INFO] {java_analyzed} issues Java analysées par le modèle ML")
+# Règles inconnues du modèle : classification de repli par sévérité.
+# BLOCKER/CRITICAL → TP forcé ; MAJOR/MINOR/INFO → FP par défaut.
+SEVERITY_FORCED_TP = {"BLOCKER", "CRITICAL"}
+
+for issue in unknown_rule_issues:
+    if issue["severity"] in SEVERITY_FORCED_TP:
+        issue["ml_prediction"]  = 0
+        issue["fp_probability"] = 0.0
+        issue["note"] = "Forcé TP : règle inconnue du modèle mais sévérité BLOCKER/CRITICAL"
+        true_positives.append(issue)
+    else:
+        issue["ml_prediction"]  = 1
+        issue["fp_probability"] = 1.0
+        issue["note"] = "Classé FP par défaut : règle inconnue du modèle, sévérité faible"
+        false_positives.append(issue)
+
+unknown_tp = sum(1 for i in unknown_rule_issues if i["severity"] in SEVERITY_FORCED_TP)
+unknown_fp = len(unknown_rule_issues) - unknown_tp
+java_ml_analyzed = len(true_positives) + len(false_positives) - len(unknown_rule_issues)
+
+print(f"[INFO] {java_ml_analyzed} issues Java classées par le modèle ML")
+print(f"[INFO] {len(unknown_rule_issues)} issues Java avec règle inconnue → {unknown_tp} TP / {unknown_fp} FP (par sévérité)")
 print(f"[INFO] {len(non_java_issues)} issues non-Java ignorées (javascript/secrets/typescript)")
-print(f"[INFO] {len(unknown_rule_issues)} issues Java avec règle inconnue du modèle")
 
 report = {
-    "total_issues":               len(all_issues),
-    "java_issues_analyzed":       java_analyzed,
-    "non_java_issues_skipped":    len(non_java_issues),
-    "unknown_rule_issues_count":  len(unknown_rule_issues),
-    "true_positives_count":       len(true_positives),
-    "false_positives_count":      len(false_positives),
-    "true_positives":             true_positives,
-    "false_positives":            false_positives,
-    "unknown_rule_issues":        unknown_rule_issues,
-    "non_java_issues":            non_java_issues,
+    "total_issues":                   len(all_issues),
+    "java_ml_analyzed":               java_ml_analyzed,
+    "unknown_rules_classified":       len(unknown_rule_issues),
+    "unknown_rules_forced_tp":        unknown_tp,
+    "unknown_rules_default_fp":       unknown_fp,
+    "non_java_issues_skipped":        len(non_java_issues),
+    "true_positives_count":           len(true_positives),
+    "false_positives_count":          len(false_positives),
+    "true_positives":                 true_positives,
+    "false_positives":                false_positives,
+    "non_java_issues":                non_java_issues,
 }
 
 with open("sonar_filtered_report.json", "w", encoding="utf-8") as f:
