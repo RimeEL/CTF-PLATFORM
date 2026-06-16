@@ -2,7 +2,7 @@ name: CI/CD Security Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main]
   pull_request:
     branches: [ main ]
 
@@ -36,10 +36,45 @@ jobs:
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
 
+  sonar-ai-filter:
+    name: SonarCloud AI False Positive Filter
+    runs-on: ubuntu-latest
+    needs: sonarqube-analysis
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests joblib numpy gensim lightgbm scikit-learn pandas
+
+      - name: Wait for SonarCloud to process analysis
+        run: sleep 30
+
+      - name: Run AI False Positive Filter
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: RimeEL_CTF-PLATFORM
+          SONAR_ORG: rime
+        run: python scripts/sonar_filter.py
+
+      - name: Upload AI Filtered Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sonar-ai-filtered-report
+          path: sonar_filtered_report.json
+
   owasp-zap-scan:
     name: OWASP ZAP Dynamic Scan
     runs-on: ubuntu-latest
-    needs: sonarqube-analysis
+    needs: [sonarqube-analysis, sonar-ai-filter]
     continue-on-error: true
     timeout-minutes: 30
     steps:
@@ -81,7 +116,7 @@ jobs:
   trivy-scan:
     name: Trivy Image Scan
     runs-on: ubuntu-latest
-    needs: sonarqube-analysis
+    needs: [sonarqube-analysis, sonar-ai-filter]
     continue-on-error: true
     timeout-minutes: 60
     steps:
